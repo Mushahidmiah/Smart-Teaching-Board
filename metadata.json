@@ -1,0 +1,6 @@
+{
+  "name": "Quran Study Circle",
+  "description": "Smart Quran Teaching Board for online educators",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
