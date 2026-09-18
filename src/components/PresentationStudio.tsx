@@ -46,6 +46,46 @@ export function PresentationStudio({ ws1, ws2, updateWs1, updateWs2, pdfs, onExi
     setConfig(DEFAULT_CONFIG);
   };
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const [pinchStartDist, setPinchStartDist] = useState<number | null>(null);
+  const [pinchStartZoom, setPinchStartZoom] = useState<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 2) {
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      setPinchStartDist(dist);
+      setPinchStartZoom(config.zoomLevel);
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (e.touches.length === 2 && pinchStartDist !== null && pinchStartZoom !== null) {
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      const scale = dist / pinchStartDist;
+      const newZoom = Math.max(0.5, Math.min(5, pinchStartZoom * scale));
+      updateConfig({ zoomLevel: newZoom });
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setPinchStartDist(null);
+    setPinchStartZoom(null);
+  };
+
   // Convert the studio's logical content mode to what the Workspace needs
   // We can force the workspace state locally if needed, but since we are wrapping,
   // we can just render the right things.
@@ -93,29 +133,36 @@ export function PresentationStudio({ ws1, ws2, updateWs1, updateWs2, pdfs, onExi
       
       {/* The main studio area where the canvas lives */}
       <div 
-        className={`flex-1 overflow-auto relative flex ${getAlignX()} ${getAlignY()} transition-all duration-300 ease-in-out`} 
-        style={{ padding: `${config.padding}px` }}
+        className={`flex-1 overflow-auto relative flex ${getAlignX()} ${getAlignY()} transition-all duration-300 ease-in-out`}
+        style={{ 
+          padding: isMobile ? '0px' : `${config.padding}px`,
+          touchAction: 'pan-x pan-y' // Allow panning, handle pinch manually
+        }}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchEnd}
       >
         
         {/* The Teaching Canvas Wrapper */}
         <div 
-          className="relative bg-[#F8F9FA] rounded-xl overflow-hidden shadow-2xl ring-1 ring-gray-700/50 transition-all duration-300 ease-in-out"
+          className="relative bg-[#F8F9FA] sm:rounded-xl overflow-hidden shadow-2xl sm:ring-1 sm:ring-gray-700/50 transition-all duration-300 ease-in-out"
           style={{
-            width: isPanelCollapsed || config.canvasWidth === 'auto' ? '100%' : `${config.canvasWidth}px`,
-            height: isPanelCollapsed || config.canvasHeight === 'auto' ? '100%' : `${config.canvasHeight}px`,
-            transform: isPanelCollapsed ? 'scale(1)' : `scale(${config.zoomLevel})`,
+            width: isPanelCollapsed || config.canvasWidth === 'auto' || isMobile ? '100%' : `${config.canvasWidth}px`,
+            height: isPanelCollapsed || config.canvasHeight === 'auto' || isMobile ? '100%' : `${config.canvasHeight}px`,
+            transform: isPanelCollapsed || isMobile ? 'scale(1)' : `scale(${config.zoomLevel})`,
             transformOrigin: `${config.alignX} ${config.alignY}`, // e.g., 'center center'
-            resize: isPanelCollapsed ? 'none' : 'both',
+            resize: isPanelCollapsed || isMobile ? 'none' : 'both',
             overflow: 'hidden',
-            minWidth: '400px',
-            minHeight: '300px'
+            minWidth: isMobile ? '100%' : '400px',
+            minHeight: isMobile ? '100%' : '300px'
           }}
         >
           {/* Internal Application Structure tailored for Presentation */}
           <div className="flex flex-col h-full w-full">
             <div className={`flex-1 flex flex-row overflow-hidden relative`}>
                {/* Workspace 1 */}
-               {(layoutMode === 'single' || layoutMode === 'split' || layoutMode === 'focus-1') && (
+               {(layoutMode === 'single' || layoutMode === 'split') && (
                 <div key={overrideWs1.id} className={`${layoutMode === 'split' ? 'w-1/2 border-r-2 border-brand-dark-green' : 'w-full'} flex-shrink-0 flex`}>
                   <Workspace 
                     workspace={overrideWs1} 
@@ -130,7 +177,7 @@ export function PresentationStudio({ ws1, ws2, updateWs1, updateWs2, pdfs, onExi
               )}
               
               {/* Workspace 2 */}
-              {(layoutMode === 'split' || layoutMode === 'focus-2') && (
+              {layoutMode === 'split' && (
                 <div key={ws2.id} className={`${layoutMode === 'split' ? 'w-1/2' : 'w-full'} flex-shrink-0 flex`}>
                   <Workspace 
                     workspace={ws2} 
@@ -161,7 +208,7 @@ export function PresentationStudio({ ws1, ws2, updateWs1, updateWs2, pdfs, onExi
 
       {/* Settings Panel */}
       <div 
-        className={`transition-all duration-300 ease-in-out border-l border-gray-800 ${isPanelCollapsed ? 'w-0 overflow-hidden border-none opacity-0' : 'w-80 opacity-100 shrink-0'}`}
+        className={`transition-all duration-300 ease-in-out border-gray-800 ${isMobile ? 'absolute top-0 right-0 h-full z-[60] bg-gray-900 shadow-2xl' : 'border-l relative shrink-0'} ${isPanelCollapsed ? (isMobile ? 'translate-x-full opacity-0 w-80' : 'w-0 overflow-hidden border-none opacity-0') : 'w-80 opacity-100 translate-x-0'}`}
       >
         <PresentationSettingsPanel 
           config={config} 

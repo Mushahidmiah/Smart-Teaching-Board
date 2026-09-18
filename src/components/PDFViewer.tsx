@@ -28,8 +28,8 @@ export function PDFViewer({ pdf, workspace, updateWorkspace, setTotalPages, isPr
   };
 
   return (
-    <div className={`flex-1 overflow-y-auto overflow-x-auto flex flex-col items-center relative p-4 min-h-[400px] ${isPresentationMode ? 'bg-black' : 'bg-[#F8F9FA]'}`}>
-      <div className={`relative shadow-2xl bg-white rounded-sm inline-block ${isPresentationMode ? 'border-none' : 'border border-gray-200'}`} style={{ width: pageDimensions.width, height: pageDimensions.height }}>
+    <div className={`flex-1 overflow-y-auto overflow-x-auto flex flex-col items-center relative p-0 sm:p-4 min-h-[300px] sm:min-h-[400px] ${isPresentationMode ? 'bg-black' : 'bg-[#F8F9FA]'}`}>
+      <div className={`relative shadow-2xl bg-white sm:rounded-sm inline-block ${isPresentationMode ? 'border-none' : 'border border-gray-200'}`} style={{ width: pageDimensions.width, height: pageDimensions.height }}>
         <Document
           file={pdf.url}
           onLoadSuccess={onDocumentLoadSuccess}

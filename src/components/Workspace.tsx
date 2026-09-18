@@ -30,12 +30,12 @@ export function Workspace({
   const activePdf = pdfs.find(p => p.id === workspace.activePdfId);
 
   return (
-    <div className={`flex-1 flex flex-col h-full overflow-hidden relative min-w-[400px] ${isPresentationMode ? 'bg-[#F8F9FA] border-r border-gray-300' : 'bg-[#F8F9FA] border-r border-gray-200'}`}>
+    <div className={`flex-1 flex flex-col h-full overflow-hidden relative min-w-0 sm:min-w-[400px] ${isPresentationMode ? 'bg-[#F8F9FA] border-r border-gray-300' : 'bg-[#F8F9FA] border-r border-gray-200'}`}>
       
       {/* Workspace Header - Can be toggled in Presentation Mode */}
       {(!isPresentationMode || !hideHeader) && (
-        <div className="h-12 bg-white border-b border-gray-200 flex items-center justify-between px-4 shrink-0 shadow-sm z-10">
-          <div className="flex items-center gap-3 w-full max-w-md">
+        <div className="h-12 bg-white border-b border-gray-200 flex items-center justify-between px-2 sm:px-4 shrink-0 shadow-sm z-10 overflow-x-auto">
+          <div className="flex items-center gap-2 sm:gap-3 w-full max-w-md shrink-0">
             <input 
               type="text" 
               value={workspace.name}

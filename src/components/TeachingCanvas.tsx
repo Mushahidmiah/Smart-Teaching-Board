@@ -43,7 +43,7 @@ export function TeachingCanvas({ workspace, updateWorkspace, setShowAnimations, 
   const dur = (base: number) => base / speed;
 
   return (
-    <div className={`flex-1 overflow-hidden flex items-center justify-center p-8 relative ${isPresentationMode ? 'bg-black' : 'bg-[#F8F9FA]'}`}>
+    <div className={`flex-1 overflow-hidden flex items-center justify-center p-2 sm:p-8 relative ${isPresentationMode ? 'bg-black' : 'bg-[#F8F9FA]'}`}>
       <motion.div 
         ref={containerRef}
         initial={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -69,9 +69,9 @@ export function TeachingCanvas({ workspace, updateWorkspace, setShowAnimations, 
               بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
             </h2>
 
-            <div className="flex items-center justify-center gap-16 md:gap-24" key={animKey}>
+            <div className="flex items-center justify-center gap-4 sm:gap-16 md:gap-24" key={animKey}>
               {/* Box 1: Letter Focus & Harakat */}
-              <div className="flex flex-col items-center justify-center relative w-32 h-32">
+              <div className="flex flex-col items-center justify-center relative w-20 sm:w-32 h-32">
                 {activeAnim === 'arrow' && isPlaying && (
                   <motion.div
                     initial={{ opacity: 0, y: -20 }}
@@ -130,7 +130,7 @@ export function TeachingCanvas({ workspace, updateWorkspace, setShowAnimations, 
               </div>
 
               {/* Box 2: Madd Stretch */}
-              <div className="flex flex-col items-center justify-center relative w-32 h-32">
+              <div className="flex flex-col items-center justify-center relative w-20 sm:w-32 h-32">
                 {activeAnim === 'star' && isPlaying && (
                   <motion.div
                     initial={{ scale: 0, rotate: -180, opacity: 0 }}

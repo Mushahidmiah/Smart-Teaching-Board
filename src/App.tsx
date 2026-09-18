@@ -97,6 +97,7 @@ export default function App() {
   const [layoutMode, setLayoutMode] = useState<LayoutMode>('split');
   const [pdfs, setPdfs] = useState<PdfDocument[]>([]);
   const [isPresentationMode, setIsPresentationMode] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [students, setStudents] = useState<StudentProfile[]>(INITIAL_STUDENTS);
   
   const [ws1, setWs1] = useState<WorkspaceState>(initialWorkspace1);
@@ -184,10 +185,18 @@ export default function App() {
 
   return (
     <div className="flex h-screen w-full bg-brand-soft-white text-brand-text overflow-hidden font-sans">
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Sidebar 
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab} 
+        isOpen={isMobileSidebarOpen}
+        onClose={() => setIsMobileSidebarOpen(false)}
+      />
       
-      <div className="flex-1 flex flex-col h-full overflow-hidden relative">
-        <Header onEnterPresentationMode={enterPresentationMode} />
+      <div className="flex-1 flex flex-col h-full overflow-hidden relative min-w-0">
+        <Header 
+          onEnterPresentationMode={enterPresentationMode} 
+          onMenuClick={() => setIsMobileSidebarOpen(true)}
+        />
         
         {activeTab === 'pdfs' ? (
           <PDFLibrary pdfs={pdfs} setPdfs={setPdfs} />

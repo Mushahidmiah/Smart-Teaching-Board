@@ -29,13 +29,13 @@ export function BlankWhiteboard({ workspace, updateWorkspace, isPresentationMode
   return (
     <div 
       ref={containerRef} 
-      className={`flex-1 overflow-hidden relative ${isPresentationMode ? 'bg-black' : 'bg-[#F8F9FA]'}`}
+      className={`flex-1 overflow-hidden relative p-0 sm:p-4 ${isPresentationMode ? 'bg-black' : 'bg-[#F8F9FA]'}`}
     >
       {dimensions.width > 0 && (
-        <div className="absolute inset-4 rounded-xl overflow-hidden bg-white shadow-xl border border-gray-200">
+        <div className="w-full h-full sm:rounded-xl overflow-hidden bg-white shadow-xl sm:border border-gray-200 relative">
           <DrawingOverlay 
-            width={dimensions.width - 32} // Account for inset-4 (16px * 2)
-            height={dimensions.height - 32} 
+            width={dimensions.width} 
+            height={dimensions.height} 
             activeTool={workspace.activeTool} 
             pageIndex={0}
             resetKey={workspace.resetDrawings}
