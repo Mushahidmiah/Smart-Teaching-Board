@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 const PORT = 3000;
 
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
 
 // Initialize Gemini API
 const ai = new GoogleGenAI({
@@ -18,6 +18,50 @@ const ai = new GoogleGenAI({
     headers: {
       'User-Agent': 'aistudio-build',
     }
+  }
+});
+
+app.post('/api/recognize-handwriting', async (req, res) => {
+  try {
+    const { image } = req.body; // base64 image data URL
+
+    if (!process.env.GEMINI_API_KEY) {
+      return res.status(500).json({ error: 'GEMINI_API_KEY is missing' });
+    }
+
+    if (!image) {
+      return res.status(400).json({ error: 'No image provided' });
+    }
+
+    // Extract base64 part
+    const base64Data = image.replace(/^data:image\/(png|jpeg|webp);base64,/, "");
+
+    const systemInstruction = `You are a handwriting recognition assistant.
+Your task is to transcribe handwriting into clean digital text.
+Supported languages: Arabic, Bangla, English.
+Keep Arabic in proper RTL format. Keep Bangla and English in proper Unicode text.
+Return ONLY the transcribed text. Do NOT add any conversational filler, markdown formatting, or explanations. If you are extremely uncertain, return the closest guess, but prefer exact transcription. If the image is completely blank or contains no text, return an empty string.`;
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-3.1-pro-preview',
+      contents: [
+        {
+          inlineData: {
+             data: base64Data,
+             mimeType: "image/png"
+          }
+        },
+        "Transcribe the handwritten text in this image."
+      ],
+      config: {
+        systemInstruction,
+      }
+    });
+
+    res.json({ text: response.text?.trim() || '' });
+  } catch (error: any) {
+    console.error('Handwriting API Error:', error);
+    res.status(500).json({ error: error.message || 'Failed to recognize handwriting' });
   }
 });
 

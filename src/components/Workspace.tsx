@@ -60,6 +60,12 @@ export function Workspace({
           </div>
           
           <div className="flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-2 px-2 py-0.5 border border-brand-gold/30 bg-brand-soft-white rounded-full">
+              <span className="text-[10px] font-bold text-brand-dark-green tracking-wider uppercase">Hafiz Mushahid</span>
+              <span className="w-1 h-1 rounded-full bg-brand-gold"></span>
+              <span className="text-[10px] font-bold text-gray-500 tracking-wider uppercase">Online Class</span>
+            </div>
+            
             <select 
               value={workspace.activePdfId || ''}
               onChange={(e) => updateWorkspace({ activePdfId: e.target.value || null, currentPage: 1, zoom: 1 })}
@@ -103,19 +109,17 @@ export function Workspace({
       {/* Workspace Content */}
       <div 
         className={`flex-1 relative overflow-hidden flex flex-col ${isPresentationMode ? 'bg-[#F8F9FA] text-brand-text' : ''}`}
-        style={{
-          transform: workspace.currentFocus ? `scale(1.5) translate(${-(workspace.currentFocus.x + workspace.currentFocus.w/2) / 1.5 + 200}px, ${-(workspace.currentFocus.y + workspace.currentFocus.h/2) / 1.5 + 200}px)` : 'scale(1) translate(0px, 0px)',
-          transition: `transform ${workspace.focusSpeed === 'fast' ? '0.3s' : workspace.focusSpeed === 'slow' ? '1.2s' : '0.6s'} ease-in-out`
-        }}
       >
-        {workspace.currentFocus && (
-          <div 
-            className="absolute inset-0 pointer-events-none z-40 transition-opacity duration-500"
-            style={{
-              background: 'radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.4) 100%)',
-            }}
-          />
+        {workspace.focusWord && (
+          <div className="absolute top-8 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
+            <div className="bg-brand-dark-green/90 backdrop-blur-md border border-brand-gold/30 px-12 py-6 rounded-2xl shadow-[0_0_40px_rgba(34,197,94,0.3)] animate-pulse">
+              <h2 className="text-5xl md:text-7xl font-bold text-white text-center tracking-widest drop-shadow-lg" style={{ fontFamily: '"Amiri", serif', lineHeight: '1.4' }}>
+                {workspace.focusWord}
+              </h2>
+            </div>
+          </div>
         )}
+        
         {workspace.activePdfId === 'quiz' ? (
           <QuizCanvas 
             workspace={workspace} 
@@ -147,13 +151,12 @@ export function Workspace({
         )}
       </div>
 
-      {workspace.currentFocus && (
+      {workspace.focusWord && (
         <button
-          onClick={() => updateWorkspace({ currentFocus: null })}
-          className="absolute top-4 right-4 z-50 bg-brand-dark-green text-white font-bold py-2 px-4 rounded-lg shadow-xl hover:bg-opacity-90 transition-transform hover:scale-105 flex items-center gap-2"
+          onClick={() => updateWorkspace({ focusWord: null })}
+          className="absolute top-4 right-4 z-50 bg-white/10 backdrop-blur border border-white/20 text-white font-bold py-1 px-3 text-xs rounded shadow hover:bg-white/20 transition-colors flex items-center gap-2"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-          Reset View
+          Clear Focus Word
         </button>
       )}
 

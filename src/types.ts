@@ -95,6 +95,9 @@ export interface WorkspaceState {
   focusMode: 'highlight' | 'zoom';
   focusSpeed: 'slow' | 'normal' | 'fast';
   currentFocus: { x: number, y: number, w: number, h: number } | null;
+  focusWord: string | null;
+  autoConvertHandwriting: boolean;
+  convertTrigger: number;
   resetDrawings: number;
   showAnimations: boolean;
   notes: string;

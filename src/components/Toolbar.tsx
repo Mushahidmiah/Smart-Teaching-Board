@@ -163,28 +163,33 @@ export function Toolbar({
                   )}
                 </div>
 
-                <div className="w-full h-px bg-gray-200 opacity-20"></div>
-                <div>
-                  <label className="text-xs font-semibold uppercase tracking-wider opacity-70 mb-2 block">Focus & Zoom Mode</label>
-                  <div className="flex flex-col gap-2">
-                    <button
-                      onClick={() => updateWorkspace({ focusMode: 'zoom' })}
-                      className={`py-2 px-2 text-xs rounded transition-colors text-left flex justify-between items-center ${workspace.focusMode === 'zoom' ? 'bg-brand-dark-green text-white' : 'bg-gray-100 text-gray-600'} ${isPresentationMode && workspace.focusMode !== 'zoom' ? 'bg-white/10 text-gray-300' : ''}`}
-                    >
-                      <span>Focus & Zoom (Camera effect)</span>
-                      {workspace.focusMode === 'zoom' && <span className="w-2 h-2 rounded-full bg-white"></span>}
-                    </button>
-                    <button
-                      onClick={() => updateWorkspace({ focusMode: 'highlight' })}
-                      className={`py-2 px-2 text-xs rounded transition-colors text-left flex justify-between items-center ${workspace.focusMode === 'highlight' ? 'bg-brand-dark-green text-white' : 'bg-gray-100 text-gray-600'} ${isPresentationMode && workspace.focusMode !== 'highlight' ? 'bg-white/10 text-gray-300' : ''}`}
-                    >
-                      <span>Highlight Only (No zoom)</span>
-                      {workspace.focusMode === 'highlight' && <span className="w-2 h-2 rounded-full bg-white"></span>}
-                    </button>
-                  </div>
-                </div>
               </>
             )}
+
+            {/* Auto Convert Handwriting */}
+            <div>
+              <label className="flex items-center justify-between cursor-pointer">
+                <span className="text-xs font-semibold uppercase tracking-wider opacity-70">Auto Convert Handwriting</span>
+                <input 
+                  type="checkbox"
+                  checked={workspace.autoConvertHandwriting}
+                  onChange={(e) => updateWorkspace({ autoConvertHandwriting: e.target.checked })}
+                  className="rounded text-brand-dark-green focus:ring-brand-dark-green"
+                />
+              </label>
+            </div>
+
+            {/* Focus Word */}
+            <div>
+              <label className="text-xs font-semibold uppercase tracking-wider opacity-70 mb-2 block">Focus Word Effect</label>
+              <input
+                type="text"
+                placeholder="Type word to highlight..."
+                value={workspace.focusWord || ''}
+                onChange={(e) => updateWorkspace({ focusWord: e.target.value || null })}
+                className={`w-full px-3 py-2 rounded text-sm focus:outline-none focus:ring-2 focus:ring-brand-dark-green ${isPresentationMode ? 'bg-white/10 text-white placeholder:text-white/40' : 'bg-gray-50 text-gray-800 border border-gray-200'}`}
+              />
+            </div>
 
             <div>
               <label className="text-xs font-semibold uppercase tracking-wider opacity-70 mb-2 block">Text Size</label>
@@ -416,6 +421,15 @@ export function Toolbar({
       </div>
 
       <div className="flex items-center gap-2">
+        <button 
+          onClick={() => updateWorkspace({ convertTrigger: workspace.convertTrigger + 1 })}
+          className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-brand-dark-green hover:text-white bg-brand-light-green text-brand-dark-green transition-colors text-sm font-medium border border-brand-dark-green/20"
+          title="Convert handwriting to text"
+        >
+          <Type className="w-5 h-5" />
+          <span className="hidden sm:inline">Convert to Digital</span>
+        </button>
+
         <button 
           onClick={() => updateWorkspace({ showAnimations: !workspace.showAnimations })}
           className={`flex items-center gap-2 px-3 py-2 rounded-md transition-colors text-sm font-medium ${workspace.showAnimations ? 'bg-brand-gold/20 text-brand-dark-green' : 'hover:bg-gray-100 text-gray-600'}`}

@@ -17,6 +17,13 @@ export function Header({ onEnterPresentationMode }: HeaderProps) {
           <h1 className="font-bold text-lg text-brand-dark-green leading-tight">Quran Study Circle</h1>
           <p className="text-xs text-gray-500 font-medium tracking-wide uppercase">Smart Teaching Board</p>
         </div>
+        
+        <div className="ml-4 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-full hidden md:flex items-center gap-2">
+          <User className="w-3.5 h-3.5 text-brand-gold" />
+          <span className="text-[10px] font-bold text-brand-dark-green tracking-wider uppercase">Hafiz Mushahid</span>
+          <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+          <span className="text-[10px] font-bold text-gray-500 tracking-wider uppercase">Online Class</span>
+        </div>
       </div>
 
       <div className="flex items-center gap-6">

@@ -201,6 +201,8 @@ export function TeachingCanvas({ workspace, updateWorkspace, setShowAnimations, 
             isRounded={workspace.isRounded}
             focusMode={workspace.focusMode}
             focusSpeed={workspace.focusSpeed}
+            autoConvertHandwriting={workspace.autoConvertHandwriting}
+            convertTrigger={workspace.convertTrigger}
             onFocusRegion={updateWorkspace ? (rect) => {
               if (workspace.focusMode === 'zoom') {
                 setShowAnimations(false);

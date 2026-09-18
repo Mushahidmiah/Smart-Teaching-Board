@@ -50,6 +50,8 @@ export function BlankWhiteboard({ workspace, updateWorkspace, isPresentationMode
             isRounded={workspace.isRounded}
             focusMode={workspace.focusMode}
             focusSpeed={workspace.focusSpeed}
+            autoConvertHandwriting={workspace.autoConvertHandwriting}
+            convertTrigger={workspace.convertTrigger}
             onFocusRegion={updateWorkspace ? (rect) => {
               if (workspace.focusMode === 'zoom') {
                 updateWorkspace({ currentFocus: rect });
